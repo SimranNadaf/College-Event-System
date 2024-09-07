@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart' show ByteData, Uint8List, rootBundle;
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -51,11 +52,14 @@ class _AuthScreenState extends State<AuthScreen> {
               .child('user_images')
               .child('${userCredential.user!.uid}.jpg');
 
-          await storageRef.putFile(_selectedImage == null
-              ? File('assets/user.png')
-              : _selectedImage!);
+          if (_selectedImage == null) {
+            ByteData data = await rootBundle.load('assets/user.png');
+            List<int> bytes = data.buffer.asUint8List();
+            await storageRef.putData(Uint8List.fromList(bytes));
+          } else {
+            await storageRef.putFile(_selectedImage!);
+          }
           final imageUrl = await storageRef.getDownloadURL();
-
           FirebaseFirestore.instance
               .collection('users')
               .doc(userCredential.user!.uid)
@@ -89,8 +93,8 @@ class _AuthScreenState extends State<AuthScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              margin: const EdgeInsets.only(
-                  top: 80, left: 20, right: 20, bottom: 20),
+              margin: EdgeInsets.only(
+                  top: _isLogin ? 160 : 80, left: 20, right: 20, bottom: 20),
               width: 120,
               child: Image.asset('assets/chat.png'),
             ),
