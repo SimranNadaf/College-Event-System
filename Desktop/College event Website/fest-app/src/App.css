@@ -1,0 +1,28 @@
+ul {
+    list-style-type: none;
+    margin: 10px;
+    padding: 10px;
+    width: 25%;
+    background-color: #eed70a;
+    height: auto;
+  }
+  
+  li a {
+    display: block;
+    color: #000;
+    padding: 16px 16px;
+    text-decoration: none;
+  }
+  
+  /* Change the link color on hover */
+  li a:hover {
+    background-color: rgb(235, 243, 123);
+    color: rgb(10, 9, 9);
+  }
+
+ img {
+    border-radius: 50%;
+    width: 50%;
+  }
+
+  
